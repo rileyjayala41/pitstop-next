@@ -82,30 +82,33 @@ export default function AdminLeadsTable({ initialLeads }: { initialLeads: Lead[]
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filter, leads]);
 
+  async function patchLead(id: string, payload: { status?: string; assigned_to?: string; notes?: string }) {
+    const res = await fetch(`/api/leads/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    const json = await res.json();
+    if (!res.ok || !json.ok) throw new Error(json?.error || "Update failed");
+    return json.lead as { id: string; status: string; assigned_to: string | null; notes: string | null };
+  }
+
   async function save() {
     if (!selected) return;
     setSaving(true);
     setMsg(null);
 
     try {
-      const res = await fetch(`/api/leads/${selected.id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status, assigned_to: assignedTo, notes }),
+      const updated = await patchLead(selected.id, {
+        status,
+        assigned_to: assignedTo,
+        notes,
       });
-
-      const json = await res.json();
-      if (!res.ok || !json.ok) throw new Error(json?.error || "Save failed");
 
       setLeads((prev) =>
         prev.map((l) =>
           l.id === selected.id
-            ? {
-                ...l,
-                status: json.lead.status,
-                assigned_to: json.lead.assigned_to,
-                notes: json.lead.notes,
-              }
+            ? { ...l, status: updated.status, assigned_to: updated.assigned_to, notes: updated.notes }
             : l
         )
       );
@@ -113,6 +116,29 @@ export default function AdminLeadsTable({ initialLeads }: { initialLeads: Lead[]
       setMsg("Saved ✅");
     } catch (e: any) {
       setMsg(`Error: ${e?.message || "Save failed"}`);
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function markContacted() {
+    if (!selected) return;
+    setSaving(true);
+    setMsg(null);
+
+    try {
+      const updated = await patchLead(selected.id, { status: "Contacted" });
+
+      // Update editor state + list state
+      setStatus(updated.status);
+
+      setLeads((prev) =>
+        prev.map((l) => (l.id === selected.id ? { ...l, status: updated.status } : l))
+      );
+
+      setMsg("Marked Contacted ✅");
+    } catch (e: any) {
+      setMsg(`Error: ${e?.message || "Update failed"}`);
     } finally {
       setSaving(false);
     }
@@ -163,30 +189,73 @@ Notes: ${notes || "-"}
         </div>
 
         <div style={{ maxHeight: 520, overflowY: "auto" }}>
-          {filteredLeads.map((l) => (
-            <button
-              key={l.id}
-              onClick={() => setSelectedId(l.id)}
-              style={{
-                width: "100%",
-                textAlign: "left",
-                padding: 12,
-                border: "none",
-                borderBottom: "1px solid #2a2a2a",
-                background: l.id === selectedId ? "rgba(255,255,255,0.08)" : "transparent",
-                color: "inherit",
-                cursor: "pointer",
-              }}
-            >
-              <strong>{l.name}</strong>
-              <div style={{ opacity: 0.8 }}>
-                {l.service} • {l.vehicle}
-              </div>
-              <div style={{ opacity: 0.7 }}>
-                Status: <strong>{l.status}</strong>
-              </div>
-            </button>
-          ))}
+          {filteredLeads.map((l) => {
+            const active = l.id === selectedId;
+
+            // 🔥 Highlight NEW leads
+            const isNew = l.status === "New";
+
+            return (
+              <button
+                key={l.id}
+                onClick={() => setSelectedId(l.id)}
+                style={{
+                  width: "100%",
+                  textAlign: "left",
+                  padding: 12,
+                  border: "none",
+                  borderBottom: "1px solid #2a2a2a",
+                  background: active
+                    ? "rgba(255,255,255,0.10)"
+                    : isNew
+                    ? "rgba(255, 215, 0, 0.12)" // subtle highlight
+                    : "transparent",
+                  color: "inherit",
+                  cursor: "pointer",
+                  position: "relative",
+                }}
+              >
+                <div style={{ display: "flex", justifyContent: "space-between", gap: 10 }}>
+                  <strong>{l.name}</strong>
+                  <span style={{ opacity: 0.7, whiteSpace: "nowrap" }}>
+                    {new Date(l.created_at).toLocaleDateString()}
+                  </span>
+                </div>
+
+                <div style={{ opacity: 0.85, marginTop: 4 }}>
+                  {l.service} • {l.vehicle}
+                </div>
+
+                <div style={{ opacity: 0.7, marginTop: 2 }}>
+                  Status: <strong>{l.status}</strong>
+                </div>
+
+                {/* NEW badge */}
+                {isNew && (
+                  <span
+                    style={{
+                      position: "absolute",
+                      top: 10,
+                      right: 90,
+                      fontSize: 12,
+                      padding: "2px 8px",
+                      borderRadius: 999,
+                      border: "1px solid rgba(255,215,0,0.5)",
+                      background: "rgba(255,215,0,0.15)",
+                    }}
+                  >
+                    NEW
+                  </span>
+                )}
+              </button>
+            );
+          })}
+
+          {filteredLeads.length === 0 && (
+            <div style={{ padding: 12 }}>
+              No leads in <strong>{filter}</strong>.
+            </div>
+          )}
         </div>
       </div>
 
@@ -215,6 +284,9 @@ Notes: ${notes || "-"}
               </a>
               <button className="quote-btn" onClick={copySummary}>
                 Copy
+              </button>
+              <button className="quote-btn" onClick={markContacted} disabled={saving}>
+                Mark Contacted
               </button>
             </div>
 
