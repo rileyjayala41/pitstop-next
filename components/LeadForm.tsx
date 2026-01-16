@@ -7,25 +7,43 @@ export default function LeadForm() {
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
 
   async function sendEmail(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setStatus("sending");
+  e.preventDefault();
+  setStatus("sending");
 
-    const form = e.currentTarget;
+  const form = e.currentTarget;
 
-    try {
-      const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!;
-      const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!;
-      const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!;
+  try {
+    const formData = new FormData(form);
+    const payload = Object.fromEntries(formData.entries());
 
-      await emailjs.sendForm(serviceId, templateId, form, { publicKey });
+    // 1) Save lead to database
+    const res = await fetch("/api/leads", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
 
-      form.reset();
-      setStatus("sent");
-    } catch (error) {
-      console.error("EmailJS error:", error);
-      setStatus("error");
+    const json = await res.json();
+    if (!res.ok || !json.ok) {
+      throw new Error(json?.error || "Failed to save lead.");
     }
+
+    // 2) Email notification (EmailJS)
+    const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!;
+    const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!;
+    const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!;
+
+    await emailjs.sendForm(serviceId, templateId, form, { publicKey });
+
+    // 3) Reset
+    form.reset();
+    setStatus("sent");
+  } catch (error) {
+    console.error("Lead submit error:", error);
+    setStatus("error");
   }
+}
+
 
   return (
     <>
