@@ -46,6 +46,13 @@ export default function HomePage() {
         {/* QUOTE FORM */}
         <section id="quote-form">
           <h2>Get Your Quote</h2>
+
+          {/*i
+          {/* NOTE:
+              UTM tracking + permanent saving is handled inside LeadForm.tsx + /api/leads.
+              Your homepage does not need special code for that.
+              Keep this page simple and stable.
+          */}
           <LeadForm />
         </section>
 

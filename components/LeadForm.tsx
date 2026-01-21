@@ -10,6 +10,16 @@ declare global {
   }
 }
 
+type UTMFields = {
+  utm_source: string;
+  utm_medium: string;
+  utm_campaign: string;
+  utm_content: string;
+  utm_term: string;
+  gclid: string;
+  fbclid: string;
+};
+
 function loadGooglePlaces(apiKey: string): Promise<void> {
   return new Promise((resolve, reject) => {
     if (window.google?.maps?.places) return resolve();
@@ -19,7 +29,9 @@ function loadGooglePlaces(apiKey: string): Promise<void> {
     );
     if (existing) {
       existing.addEventListener("load", () => resolve());
-      existing.addEventListener("error", () => reject(new Error("Google script failed")));
+      existing.addEventListener("error", () =>
+        reject(new Error("Google script failed"))
+      );
       return;
     }
 
@@ -42,36 +54,62 @@ function digitsOnly(value: string) {
   return value.replace(/\D/g, "");
 }
 
-export default function LeadForm() {
-  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+function readUtmFromUrl(): UTMFields {
+  if (typeof window === "undefined") {
+    return {
+      utm_source: "",
+      utm_medium: "",
+      utm_campaign: "",
+      utm_content: "",
+      utm_term: "",
+      gclid: "",
+      fbclid: "",
+    };
+  }
 
-  // Phone
+  const p = new URLSearchParams(window.location.search);
+
+  return {
+    utm_source: p.get("utm_source") || "",
+    utm_medium: p.get("utm_medium") || "",
+    utm_campaign: p.get("utm_campaign") || "",
+    utm_content: p.get("utm_content") || "",
+    utm_term: p.get("utm_term") || "",
+    gclid: p.get("gclid") || "",
+    fbclid: p.get("fbclid") || "",
+  };
+}
+
+export default function LeadForm() {
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
+    "idle"
+  );
+
+  // UTMs
+  const [utm, setUtm] = useState<UTMFields>({
+    utm_source: "",
+    utm_medium: "",
+    utm_campaign: "",
+    utm_content: "",
+    utm_term: "",
+    gclid: "",
+    fbclid: "",
+  });
+
+  // Phone (digits only + validated)
   const [phoneError, setPhoneError] = useState<string | null>(null);
   const [phoneValue, setPhoneValue] = useState("");
 
-  // Address (autocomplete)
+  // Address autocomplete
   const [addressValue, setAddressValue] = useState("");
   const [addressReady, setAddressReady] = useState(false);
   const addressInputRef = useRef<HTMLInputElement | null>(null);
 
-  // Vehicle dropdowns
-  const currentYear = new Date().getFullYear();
-  const years = Array.from({ length: currentYear - 1984 }, (_, i) => String(currentYear - i)); // 1985..now
+  // Capture UTMs once on load (keeps the “source/campaign” tied to the session/page load)
+  useEffect(() => {
+    setUtm(readUtmFromUrl());
+  }, []);
 
-  const [year, setYear] = useState<string>("");
-  const [make, setMake] = useState<string>("");
-  const [model, setModel] = useState<string>("");
-  const [drivetrain, setDrivetrain] = useState<string>("");
-
-  const [makes, setMakes] = useState<string[]>([]);
-  const [models, setModels] = useState<string[]>([]);
-  const [vehicleLoading, setVehicleLoading] = useState<null | "makes" | "models">(null);
-
-  // Client-side cache so we don't spam API (and we avoid repeated 502 bursts)
-  const makesCache = useRef<Record<string, string[]>>({});
-  const modelsCache = useRef<Record<string, string[]>>({});
-
-  // Load Google Places
   useEffect(() => {
     const key = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
     if (!key) {
@@ -107,79 +145,6 @@ export default function LeadForm() {
     };
   }, []);
 
-  // Year -> Makes
-  useEffect(() => {
-    if (!year) {
-      setMakes([]);
-      setMake("");
-      setModels([]);
-      setModel("");
-      return;
-    }
-
-    // Serve from cache if available
-    if (makesCache.current[year]) {
-      setMakes(makesCache.current[year]);
-      setMake("");
-      setModels([]);
-      setModel("");
-      return;
-    }
-
-    setVehicleLoading("makes");
-
-    fetch(`/api/vehicles/makes?year=${encodeURIComponent(year)}`)
-      .then(async (r) => {
-        const j = await r.json();
-        if (!r.ok || !j.ok) throw new Error(j?.error || "Makes failed");
-        const list: string[] = j.makes || [];
-        makesCache.current[year] = list;
-        setMakes(list);
-        setMake("");
-        setModels([]);
-        setModel("");
-      })
-      .catch((e) => {
-        console.error("Makes error:", e);
-        setMakes([]);
-      })
-      .finally(() => setVehicleLoading(null));
-  }, [year]);
-
-  // Make -> Models
-  useEffect(() => {
-    if (!year || !make) {
-      setModels([]);
-      setModel("");
-      return;
-    }
-
-    const cacheKey = `${year}__${make}`;
-
-    if (modelsCache.current[cacheKey]) {
-      setModels(modelsCache.current[cacheKey]);
-      setModel("");
-      return;
-    }
-
-    setVehicleLoading("models");
-
-    fetch(`/api/vehicles/models?year=${encodeURIComponent(year)}&make=${encodeURIComponent(make)}`)
-      .then(async (r) => {
-        const j = await r.json();
-        if (!r.ok || !j.ok) throw new Error(j?.error || "Models failed");
-        const list: string[] = j.models || [];
-        modelsCache.current[cacheKey] = list;
-        setModels(list);
-        setModel("");
-      })
-      .catch((e) => {
-        console.error("Models error:", e);
-        setModels([]);
-      })
-      .finally(() => setVehicleLoading(null));
-  }, [year, make]);
-
   async function sendEmail(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setPhoneError(null);
@@ -198,19 +163,25 @@ export default function LeadForm() {
       return;
     }
 
+    // Always store phone in E.164 format
     formData.set("phone", phone.format("E.164"));
 
-    // Address state
+    // Address from state (Google autocomplete)
     formData.set("address", addressValue.trim());
 
-    // Vehicle single-string (keeps your DB/email the same)
-    const vehicleString = `${year} ${make} ${model}${drivetrain ? ` (${drivetrain})` : ""}`.trim();
-    formData.set("vehicle", vehicleString);
+    // Attach tracking fields to BOTH DB payload and EmailJS form
+    formData.set("utm_source", utm.utm_source);
+    formData.set("utm_medium", utm.utm_medium);
+    formData.set("utm_campaign", utm.utm_campaign);
+    formData.set("utm_content", utm.utm_content);
+    formData.set("utm_term", utm.utm_term);
+    formData.set("gclid", utm.gclid);
+    formData.set("fbclid", utm.fbclid);
 
     try {
       const payload = Object.fromEntries(formData.entries());
 
-      // Save to DB
+      // Save lead to DB (Supabase via /api/leads)
       const res = await fetch("/api/leads", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -220,28 +191,23 @@ export default function LeadForm() {
       const json = await res.json();
       if (!res.ok || !json.ok) throw new Error(json?.error || "Failed to save lead.");
 
-      // EmailJS
+      // EmailJS notification
       const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!;
       const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!;
       const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!;
 
       await emailjs.sendForm(serviceId, templateId, form, { publicKey });
 
+      // Reset
       form.reset();
       setPhoneValue("");
       setAddressValue("");
-      setYear("");
-      setMake("");
-      setModel("");
-      setDrivetrain("");
       setStatus("sent");
     } catch (err) {
       console.error("Lead submit error:", err);
       setStatus("error");
     }
   }
-
-  const vehicleReady = Boolean(year && make && model);
 
   return (
     <form onSubmit={sendEmail} className="quote-form">
@@ -276,62 +242,12 @@ export default function LeadForm() {
         autoComplete="street-address"
       />
 
-      {/* VEHICLE */}
-      <select className="input" value={year} onChange={(e) => setYear(e.target.value)} required>
-        <option value="">Vehicle Year</option>
-        {years.map((y) => (
-          <option key={y} value={y}>
-            {y}
-          </option>
-        ))}
-      </select>
-
-      <select
-        className="input"
-        value={make}
-        onChange={(e) => setMake(e.target.value)}
-        required
-        disabled={!year || vehicleLoading === "makes"}
-      >
-        <option value="">
-          {vehicleLoading === "makes" ? "Loading makes..." : "Make"}
-        </option>
-        {makes.map((m) => (
-          <option key={m} value={m}>
-            {m}
-          </option>
-        ))}
-      </select>
-
-      <select
-        className="input"
-        value={model}
-        onChange={(e) => setModel(e.target.value)}
-        required
-        disabled={!year || !make || vehicleLoading === "models"}
-      >
-        <option value="">
-          {vehicleLoading === "models" ? "Loading models..." : "Model"}
-        </option>
-        {models.map((m) => (
-          <option key={m} value={m}>
-            {m}
-          </option>
-        ))}
-      </select>
-
-      <select className="input" value={drivetrain} onChange={(e) => setDrivetrain(e.target.value)}>
-        <option value="">Drivetrain (optional)</option>
-        <option value="2WD">2WD</option>
-        <option value="4WD">4WD</option>
-        <option value="AWD">AWD</option>
-      </select>
-
-      {/* Hidden field your backend expects */}
+      {/* VEHICLE (simple again) */}
       <input
-        type="hidden"
+        className="input"
         name="vehicle"
-        value={`${year} ${make} ${model}${drivetrain ? ` (${drivetrain})` : ""}`.trim()}
+        placeholder="Vehicle (Year Make Model) — ex: 2014 Toyota Camry"
+        required
       />
 
       <select className="input" name="service" required>
@@ -346,8 +262,18 @@ export default function LeadForm() {
 
       <textarea className="input" name="message" rows={4} placeholder="Tell us what's going on" />
 
-      <button className="quote-btn" type="submit" disabled={status === "sending" || !vehicleReady}>
-        {status === "sending" ? "Sending..." : vehicleReady ? "Get Quote" : "Select Vehicle Details"}
+      {/* Hidden fields so EmailJS gets them too */}
+      <input type="hidden" name="address" value={addressValue} />
+      <input type="hidden" name="utm_source" value={utm.utm_source} />
+      <input type="hidden" name="utm_medium" value={utm.utm_medium} />
+      <input type="hidden" name="utm_campaign" value={utm.utm_campaign} />
+      <input type="hidden" name="utm_content" value={utm.utm_content} />
+      <input type="hidden" name="utm_term" value={utm.utm_term} />
+      <input type="hidden" name="gclid" value={utm.gclid} />
+      <input type="hidden" name="fbclid" value={utm.fbclid} />
+
+      <button className="quote-btn" type="submit" disabled={status === "sending"}>
+        {status === "sending" ? "Sending..." : "Get Quote"}
       </button>
 
       {status === "sent" && <p>Thanks! We’ll be in touch shortly.</p>}

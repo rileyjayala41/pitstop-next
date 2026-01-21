@@ -1,26 +1,27 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
+const ADMIN_COOKIE_NAME = "pitstop_admin";
+
 export function middleware(req: NextRequest) {
-  const { pathname, searchParams } = req.nextUrl;
+  const { pathname } = req.nextUrl;
 
-  // Only protect /admin routes
-  if (!pathname.startsWith("/admin")) return NextResponse.next();
+  // Only protect /admin/* (NOT /admin-access)
+  const isAdminRoute = pathname.startsWith("/admin/");
+  if (!isAdminRoute) return NextResponse.next();
 
-  const password = process.env.ADMIN_PASSWORD;
-  const key = searchParams.get("key");
+  const token = req.cookies.get(ADMIN_COOKIE_NAME)?.value;
 
-  // If no password configured, allow (so you don't lock yourself out by accident)
-  if (!password) return NextResponse.next();
+  // If no cookie -> redirect to login page
+  if (!token) {
+    const url = req.nextUrl.clone();
+    url.pathname = "/admin-access";
+    url.searchParams.set("next", pathname);
+    return NextResponse.redirect(url);
+  }
 
-  // If correct key is provided, allow
-  if (key && key === password) return NextResponse.next();
-
-  // Otherwise redirect to a simple access page
-  const url = req.nextUrl.clone();
-  url.pathname = "/admin-access";
-  url.search = ""; // clear params
-  return NextResponse.redirect(url);
+  // Cookie exists -> allow
+  return NextResponse.next();
 }
 
 export const config = {
