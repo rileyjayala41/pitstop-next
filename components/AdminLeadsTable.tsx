@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-type Lead = {
+export type Lead = {
   id: string;
   created_at: string;
 
@@ -20,7 +20,7 @@ type Lead = {
   // legacy / optional
   source: string | null;
 
-  // NEW: UTM tracking fields (from Supabase)
+  // UTM tracking fields (from Supabase)
   utm_source?: string | null;
   utm_medium?: string | null;
   utm_campaign?: string | null;
@@ -303,7 +303,16 @@ Notes: ${notes || "-"}
           </div>
 
           {/* QUICK COUNTS */}
-          <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 10, fontSize: 13, opacity: 0.85 }}>
+          <div
+            style={{
+              display: "flex",
+              gap: 10,
+              flexWrap: "wrap",
+              marginTop: 10,
+              fontSize: 13,
+              opacity: 0.85,
+            }}
+          >
             <span>
               Showing: <b>{filteredLeads.length}</b>
             </span>
@@ -395,9 +404,7 @@ Notes: ${notes || "-"}
           })}
 
           {filteredLeads.length === 0 && (
-            <div style={{ padding: 12 }}>
-              No leads match these filters.
-            </div>
+            <div style={{ padding: 12 }}>No leads match these filters.</div>
           )}
         </div>
       </div>
@@ -415,8 +422,12 @@ Notes: ${notes || "-"}
             </div>
 
             <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-              <a className="quote-btn" href={`tel:${selected.phone}`}>Call</a>
-              <a className="quote-btn" href={`sms:${selected.phone}`}>Text</a>
+              <a className="quote-btn" href={`tel:${selected.phone}`}>
+                Call
+              </a>
+              <a className="quote-btn" href={`sms:${selected.phone}`}>
+                Text
+              </a>
               <a
                 className="quote-btn"
                 target="_blank"
@@ -435,12 +446,25 @@ Notes: ${notes || "-"}
               </button>
             </div>
 
-            <div><strong>Address:</strong> {selected.address}</div>
-            <div><strong>Service:</strong> {selected.service}</div>
-            <div><strong>Vehicle:</strong> {selected.vehicle}</div>
+            <div>
+              <strong>Address:</strong> {selected.address}
+            </div>
+            <div>
+              <strong>Service:</strong> {selected.service}
+            </div>
+            <div>
+              <strong>Vehicle:</strong> {selected.vehicle}
+            </div>
 
             {/* MARKETING TRACKING */}
-            <div style={{ border: "1px solid #2a2a2a", borderRadius: 12, padding: 10, marginTop: 6 }}>
+            <div
+              style={{
+                border: "1px solid #2a2a2a",
+                borderRadius: 12,
+                padding: 10,
+                marginTop: 6,
+              }}
+            >
               <div style={{ fontWeight: 800, marginBottom: 6 }}>Marketing Tracking</div>
               <div style={{ display: "grid", gap: 4, fontSize: 13, opacity: 0.9 }}>
                 <div>
@@ -452,7 +476,7 @@ Notes: ${notes || "-"}
                 <div>
                   <strong>Medium:</strong> {selectedMedium}
                 </div>
-                {(cleanKey(selected.gclid) || cleanKey(selected.fbclid)) ? (
+                {cleanKey(selected.gclid) || cleanKey(selected.fbclid) ? (
                   <div style={{ opacity: 0.85 }}>
                     <strong>Click IDs:</strong>{" "}
                     {cleanKey(selected.gclid) ? `gclid=${cleanKey(selected.gclid)} ` : ""}
@@ -472,7 +496,11 @@ Notes: ${notes || "-"}
 
             <label>
               <strong>Status</strong>
-              <select className="input" value={status} onChange={(e) => setStatus(e.target.value)}>
+              <select
+                className="input"
+                value={status}
+                onChange={(e) => setStatus(e.target.value)}
+              >
                 <option>New</option>
                 <option>Contacted</option>
                 <option>Scheduled</option>
