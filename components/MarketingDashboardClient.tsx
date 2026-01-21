@@ -27,6 +27,9 @@ export type LeadLite = {
 type DateRangeKey = "7" | "30" | "90" | "all";
 type SortKey = "leads_desc" | "cpl_asc" | "spend_desc" | "newest";
 
+// ✅ tracking link base (your current Vercel domain)
+const BASE_URL = "https://pitstop-next.vercel.app";
+
 function clean(v: unknown) {
   if (typeof v !== "string") return "";
   return v.trim();
@@ -263,6 +266,20 @@ export default function MarketingDashboardClient({ campaigns, leads }: Props) {
   function closeEdit() {
     if (saving) return;
     setEditing(null);
+  }
+
+  // ✅ Copy Tracking Link (added without changing anything else)
+  function copyTrackingLink(c: CampaignRow) {
+    const source = clean(c.platform).toLowerCase() || "other";
+    const url =
+      `${BASE_URL}/?` +
+      `utm_campaign=${encodeURIComponent(c.utm_campaign)}` +
+      `&utm_source=${encodeURIComponent(source)}` +
+      `&utm_medium=cpc`;
+
+    navigator.clipboard.writeText(url);
+    setMsg("Tracking link copied ✅");
+    setTimeout(() => setMsg(null), 1500);
   }
 
   async function saveEdit() {
@@ -677,6 +694,9 @@ export default function MarketingDashboardClient({ campaigns, leads }: Props) {
                     </td>
                     <td style={td}>
                       <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                        <button className="quote-btn" onClick={() => copyTrackingLink(r)} disabled={saving}>
+                          Copy Link
+                        </button>
                         <button className="quote-btn" onClick={() => openEdit(r)} disabled={saving}>
                           Edit
                         </button>
@@ -785,7 +805,7 @@ const th: React.CSSProperties = {
   textAlign: "left",
   padding: 10,
   fontSize: 12,
-  opacity: 0.8,
+  opacity: 0.85,
   whiteSpace: "nowrap",
 };
 
@@ -799,7 +819,6 @@ const td: React.CSSProperties = {
   verticalAlign: "top",
 };
 
-// ✅ THIS WAS MISSING (fixes your build error)
 const tdRight: React.CSSProperties = {
   ...td,
   textAlign: "right",
