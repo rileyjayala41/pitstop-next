@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
 import { getSupabaseAdmin } from "@/lib/supabaseAdmin";
@@ -22,78 +22,67 @@ async function requireAdmin() {
   }
 }
 
-function isString(v: unknown): v is string {
-  return typeof v === "string";
+function clean(v: unknown) {
+  return typeof v === "string" ? v.trim() : "";
 }
 
-function isBoolean(v: unknown): v is boolean {
-  return typeof v === "boolean";
+function toNullableNumber(v: unknown) {
+  if (v === null || v === undefined || v === "") return null;
+  const n = Number(v);
+  return Number.isFinite(n) ? n : null;
 }
 
-function isNumber(v: unknown): v is number {
-  return typeof v === "number" && Number.isFinite(v);
-}
-
-export async function PATCH(req: Request, ctx: { params: { id: string } }) {
+export async function PATCH(
+  req: NextRequest,
+  context: { params: Promise<{ id: string }> }
+) {
   const auth = await requireAdmin();
-  if (!auth.ok) return NextResponse.json({ ok: false, error: auth.error }, { status: 401 });
-
-  const id = ctx.params.id;
-  if (!id) return NextResponse.json({ ok: false, error: "Missing lead id" }, { status: 400 });
-
-  const body = (await req.json().catch(() => null)) as any;
-  if (!body) return NextResponse.json({ ok: false, error: "Invalid JSON body" }, { status: 400 });
-
-  // Only accept the fields we actually support (keeps it stable)
-  const patch: Record<string, any> = {};
-
-  if (body.status !== undefined) {
-    if (!isString(body.status)) return NextResponse.json({ ok: false, error: "status must be a string" }, { status: 400 });
-    patch.status = body.status.trim();
+  if (!auth.ok) {
+    return NextResponse.json({ ok: false, error: auth.error }, { status: 401 });
   }
 
-  if (body.assigned_to !== undefined) {
-    if (!isString(body.assigned_to)) return NextResponse.json({ ok: false, error: "assigned_to must be a string" }, { status: 400 });
-    patch.assigned_to = body.assigned_to.trim() || null;
+  const { id } = await context.params;
+  if (!id) {
+    return NextResponse.json({ ok: false, error: "Missing lead id" }, { status: 400 });
   }
 
-  if (body.notes !== undefined) {
-    if (!isString(body.notes)) return NextResponse.json({ ok: false, error: "notes must be a string" }, { status: 400 });
-    patch.notes = body.notes.trim() || null;
+  const body = await req.json().catch(() => null);
+  if (!body) {
+    return NextResponse.json({ ok: false, error: "Invalid JSON body" }, { status: 400 });
   }
 
-  if (body.contacted_at !== undefined) {
-    // allow string ISO or null
-    if (!(isString(body.contacted_at) || body.contacted_at === null)) {
-      return NextResponse.json({ ok: false, error: "contacted_at must be an ISO string or null" }, { status: 400 });
-    }
-    patch.contacted_at = body.contacted_at;
+  const update: Record<string, any> = {};
+
+  if ("status" in body) update.status = clean(body.status);
+  if ("assigned_to" in body) update.assigned_to = clean(body.assigned_to);
+  if ("notes" in body) update.notes = clean(body.notes);
+
+  if ("contacted_at" in body) {
+    update.contacted_at = body.contacted_at || null;
   }
 
-  if (body.booked !== undefined) {
-    if (!isBoolean(body.booked)) return NextResponse.json({ ok: false, error: "booked must be boolean" }, { status: 400 });
-    patch.booked = body.booked;
+  if ("booked" in body) {
+    update.booked = !!body.booked;
   }
 
-  if (body.job_value !== undefined) {
-    // allow number or null
-    if (!(isNumber(body.job_value) || body.job_value === null)) {
-      return NextResponse.json({ ok: false, error: "job_value must be a number or null" }, { status: 400 });
-    }
-    patch.job_value = body.job_value;
+  if ("job_value" in body) {
+    update.job_value = toNullableNumber(body.job_value);
   }
 
-  if (Object.keys(patch).length === 0) {
-    return NextResponse.json({ ok: false, error: "No valid fields to update" }, { status: 400 });
+  if (Object.keys(update).length === 0) {
+    return NextResponse.json(
+      { ok: false, error: "No valid fields to update" },
+      { status: 400 }
+    );
   }
 
   const supabase = getSupabaseAdmin();
 
   const { data, error } = await supabase
     .from("leads")
-    .update(patch)
+    .update(update)
     .eq("id", id)
-    .select("id,status,assigned_to,notes,contacted_at,booked,job_value")
+    .select("id, status, assigned_to, notes, contacted_at, booked, job_value")
     .single();
 
   if (error) {

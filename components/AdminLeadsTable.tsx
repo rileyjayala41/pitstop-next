@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-type Lead = {
+export type Lead = {
   id: string;
   created_at: string;
 
@@ -75,7 +75,11 @@ function cleanKey(v: unknown) {
 }
 
 function formatMoney(n: number) {
-  return n.toLocaleString(undefined, { style: "currency", currency: "USD" });
+  return n.toLocaleString(undefined, demonstratedAsCurrency());
+}
+
+function demonstratedAsCurrency() {
+  return { style: "currency" as const, currency: "USD" as const };
 }
 
 export default function AdminLeadsTable({ initialLeads }: { initialLeads: Lead[] }) {
