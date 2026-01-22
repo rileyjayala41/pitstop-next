@@ -1,15 +1,18 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function AdminAccessPage() {
+  const router = useRouter();
+
   const [password, setPassword] = useState("");
-  const [msg, setMsg] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   async function login() {
+    setError(null);
     setLoading(true);
-    setMsg(null);
 
     try {
       const res = await fetch("/api/admin/simple-login", {
@@ -18,36 +21,62 @@ export default function AdminAccessPage() {
         body: JSON.stringify({ password }),
       });
 
-      const json = await res.json().catch(() => ({}));
-      if (!res.ok || !json.ok) throw new Error(json?.error || "Login failed");
+      const json = await res.json().catch(() => null);
 
-      window.location.href = "/admin/leads";
-    } catch (e: any) {
-      setMsg(e?.message || "Login failed");
+      if (!res.ok || !json?.ok) {
+        setError(json?.error || "Login failed");
+        return;
+      }
+
+      router.push("/admin/leads");
+      router.refresh();
+    } catch {
+      setError("Login failed");
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <main className="container" style={{ paddingTop: 40 }}>
-      <h1 style={{ fontSize: 28, fontWeight: 900 }}>Admin Access</h1>
-      <p style={{ opacity: 0.75 }}>Enter your admin password.</p>
+    <main style={{ maxWidth: 720, margin: "0 auto", padding: "40px 20px" }}>
+      <h1 style={{ fontSize: 34, fontWeight: 900, margin: 0 }}>Admin Access</h1>
+      <p style={{ marginTop: 10, opacity: 0.85 }}>
+        Enter your admin password to access leads and marketing.
+      </p>
 
-      <div style={{ maxWidth: 520, marginTop: 16, display: "grid", gap: 10 }}>
+      <div style={{ marginTop: 18 }}>
+        <label style={{ display: "block", fontSize: 14, opacity: 0.85, marginBottom: 8 }}>
+          Password
+        </label>
+
         <input
-          className="input"
           type="password"
-          placeholder="Admin password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          placeholder="Enter admin password"
+          style={{
+            width: "100%",
+            padding: "12px 14px",
+            borderRadius: 12,
+            border: "1px solid rgba(255,255,255,0.18)",
+            background: "rgba(255,255,255,0.06)",
+            color: "inherit",
+            outline: "none",
+          }}
         />
 
-        <button className="quote-btn" onClick={login} disabled={loading}>
+        {error ? (
+          <div style={{ marginTop: 10, color: "#ff7b7b", fontSize: 14 }}>{error}</div>
+        ) : null}
+
+        <button
+          className="quote-btn"
+          onClick={login}
+          disabled={loading || password.trim().length === 0}
+          style={{ marginTop: 14 }}
+        >
           {loading ? "Logging in..." : "Login"}
         </button>
-
-        {msg && <div style={{ color: "#ff6b6b" }}>{msg}</div>}
       </div>
     </main>
   );
