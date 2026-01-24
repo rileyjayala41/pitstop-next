@@ -1,5 +1,7 @@
+// app/reviews/page.tsx
+
 export const metadata = {
-  title: "Media & Reviews | Pit Stop Automotive",
+  title: "Reviews | Pit Stop Automotive",
   description:
     "Real customer reviews for Pit Stop Automotive — mobile mechanic services you can trust.",
 };
@@ -83,7 +85,7 @@ export default function ReviewsPage() {
     <main style={{ maxWidth: 1100, margin: "0 auto", padding: "40px 20px" }}>
       <section style={{ marginBottom: 28 }}>
         <h1 style={{ fontSize: 38, fontWeight: 900, margin: 0 }}>
-          Media & Reviews
+          Reviews
         </h1>
         <p style={{ marginTop: 10, fontSize: 18, opacity: 0.85 }}>
           Real customer feedback — honest work, clear communication, and mobile
@@ -138,7 +140,7 @@ export default function ReviewsPage() {
         </p>
       </section>
 
-      {/* Stage 1 – Local Trust: Reviews Page CTA (Upgrade 4) */}
+      {/* Stage 1 – Local Trust CTA */}
       <section
         style={{
           marginTop: 48,
@@ -151,7 +153,7 @@ export default function ReviewsPage() {
           Need help with your car?
         </h2>
         <p style={{ fontSize: 16, opacity: 0.85, marginBottom: 18 }}>
-          Request service and we’ll follow up to confirm details and availability.
+          Tell us what’s going on and we’ll follow up with next steps.
         </p>
         <a
           href="/#quote-form"
