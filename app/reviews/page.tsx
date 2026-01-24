@@ -137,6 +137,30 @@ export default function ReviewsPage() {
           Note: Review text is lightly cleaned for readability (spelling/spacing only).
         </p>
       </section>
+
+      {/* Stage 1 – Local Trust: Reviews Page CTA (Upgrade 4) */}
+      <section
+        style={{
+          marginTop: 48,
+          paddingTop: 32,
+          borderTop: "1px solid rgba(255,255,255,0.14)",
+          textAlign: "center",
+        }}
+      >
+        <h2 style={{ fontSize: 28, fontWeight: 800, marginBottom: 10 }}>
+          Need help with your car?
+        </h2>
+        <p style={{ fontSize: 16, opacity: 0.85, marginBottom: 18 }}>
+          Request service and we’ll follow up to confirm details and availability.
+        </p>
+        <a
+          href="/#quote-form"
+          className="quote-btn"
+          style={{ display: "inline-block" }}
+        >
+          Get a Free Quote
+        </a>
+      </section>
     </main>
   );
 }

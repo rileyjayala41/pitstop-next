@@ -3,6 +3,7 @@ import "./globals.css";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 
+
 export const metadata: Metadata = {
   title: "Mobile Mechanic & Auto Detailing Austin TX | Pit Stop Automotive",
   description:
@@ -28,7 +29,9 @@ export default function RootLayout({
         />
 
         {/* Your original CSS file */}
-        <link rel="stylesheet" href="/styles/style.css" />
+        <link rel="stylesheet" href="/styles/style.css?v=1" />
+
+
 
         <meta name="theme-color" content="#000000" />
       </head>
