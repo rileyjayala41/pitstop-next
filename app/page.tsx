@@ -4,28 +4,26 @@ export default function HomePage() {
   return (
     <main className="container">
       <article>
-        {/* INTRO */}
+        {/* INTRO / HERO */}
         <section id="intro">
-          <h2>We Come to You</h2>
-          <p>
-            Skip the shop. Our mobile mechanics bring expert auto care to your driveway, office, or
-            anywhere in Austin.
+          <h1 className="hero-title">
+ 	   WE COME TO YOU
+	  </h1>
+          <h1 className="hero-title">
+	   WHEREVER YOU ARE
+	  </h1>
+
+          <p style={{ fontSize: 18, opacity: 0.9, maxWidth: 560 }}>
+            Skip the shop, We'll come straight to your driveway!
           </p>
 
-          {/* Stage 1 – Local Trust: Local legitimacy signals (Upgrade 3) */}
-          <p className="local-signal" style={{ marginTop: 8, marginBottom: 0 }}>
-            <strong>Local Austin mobile service</strong> — real people, real work, no shop visit
-            needed.
-          </p>
-
-          <div className="cta">
+          <div className="cta" style={{ marginTop: 18 }}>
             <a className="quote-btn" href="#quote-form">
               Get a Free Quote
             </a>
 
-            {/* Stage 1 – Local Trust: Micro-trust near CTA (Upgrade 5A) */}
             <p style={{ marginTop: 8, marginBottom: 0, fontSize: 13, opacity: 0.78 }}>
-              No obligation quote • Local Austin service
+            Hard-working • Knowledgeable • Professional
             </p>
           </div>
         </section>
@@ -35,63 +33,49 @@ export default function HomePage() {
           <h2>Services & Pricing</h2>
           <ul className="services-list ul">
             <li>
-              <strong>Synthetic Oil Change:</strong> from $100
+              <strong>Synthetic Oil Change:</strong> starting at $100
             </li>
             <li>
-              <strong>Brake Pads:</strong> from $100 + parts
+              <strong>Brakes:</strong> starting at $100 + parts
             </li>
             <li>
-              <strong>Diagnostics:</strong> from $50
+              <strong>Diagnostics:</strong> starting at $50
             </li>
             <li>
-              <strong>Full Detail:</strong> from $120
+              <strong>Tune-Ups:</strong> starting at $125
+            </li>
+	    <li>
+              <strong>Suspension:</strong> starting at $150
             </li>
             <li>
-              <strong>Tune-Ups & Suspension:</strong> from $150
-            </li>
-            <li>
-              <strong>Engine replacement:</strong> from $1850 and up
+              <strong>Engine Replacement:</strong> starting at $1850
             </li>
           </ul>
 
-          {/* Existing local area mention (kept) */}
-          <p className="service-areas">
-            Serving <strong>Austin</strong>, Round Rock, Pflugerville, Cedar Park &amp; Georgetown
-          </p>
         </section>
 
         {/* QUOTE FORM */}
         <section id="quote-form">
-          <h2>Get Your Quote</h2>
+          <h2>Schedule Your Repair</h2>
 
-          {/* Stage 1 – Local Trust: Reduce competition near form (Upgrade 6) */}
-          <div style={{ marginTop: 8, marginBottom: 14 }}>
-            <p style={{ margin: 0, fontSize: 14, opacity: 0.85 }}>
-              <strong>Mobile mechanic in Austin</strong> — we come to you. No random subcontractors.
-            </p>
+          {/* What to expect */}
+          <div style={{ marginTop: 10, marginBottom: 16, maxWidth: 640 }}>
+            <p style={{ margin: 0, fontSize: 18, opacity: 0.9 }}>
+              <strong> After you submit the form we will reach out and schedule a time to fix your car! </strong>
+	    </p>
 
-            {/* Stage 1 – Local Trust: Review Near CTA (Upgrade 1) */}
-            <p style={{ marginTop: 10, marginBottom: 0, fontSize: 14, opacity: 0.9 }}>
-              <strong>Customer said:</strong>{" "}
-              <span style={{ opacity: 0.9 }}>
-                &quot;Came to my driveway and knocked it out. Saved me time and stress. Highly
-                recommend!&quot;
-              </span>
-            </p>
-
-            {/* Stage 1 – Local Trust: What Happens Next (Upgrade 2) */}
-            <p style={{ marginTop: 10, marginBottom: 0, fontSize: 14, opacity: 0.85 }}>
-              <strong>What happens next:</strong> Submit → We text/call to confirm → You get a price
-              + time window (then you decide).
+            <p style={{ marginTop: 10, marginBottom: 0, fontSize: 13, opacity: 0.75 }}>
+              No hassle • Honest pricing • Pit-stop Speed
             </p>
           </div>
 
-          {/* NOTE:
-              UTM tracking + permanent saving is handled inside LeadForm.tsx + /api/leads.
-              Your homepage does not need special code for that.
-              Keep this page simple and stable.
-          */}
           <LeadForm />
+	  <p style={{ marginTop: 10, marginBottom: 0, fontSize: 14, opacity: 0.85 }}>
+              <strong>Customer said:</strong>{" "}
+              <span style={{ opacity: 0.9 }}>
+                “He came to my driveway, fixed it on the spot, and saved me a trip to the shop.”
+              </span>
+            </p>
         </section>
       </article>
     </main>

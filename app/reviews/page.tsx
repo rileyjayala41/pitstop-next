@@ -3,7 +3,7 @@
 export const metadata = {
   title: "Reviews | Pit Stop Automotive",
   description:
-    "Real customer reviews for Pit Stop Automotive — mobile mechanic services you can trust.",
+    "Real feedback from customers who chose honest work, clear communication, and the convenience of mobile service.",
 };
 
 type Review = {
@@ -88,8 +88,8 @@ export default function ReviewsPage() {
           Reviews
         </h1>
         <p style={{ marginTop: 10, fontSize: 18, opacity: 0.85 }}>
-          Real customer feedback — honest work, clear communication, and mobile
-          service that saves you time.
+          Real feedback from customers who chose honest work, clear communication,
+          and the convenience of mobile service.
         </p>
       </section>
 
@@ -134,13 +134,8 @@ export default function ReviewsPage() {
             </article>
           ))}
         </div>
-
-        <p style={{ marginTop: 18, opacity: 0.65, fontSize: 12 }}>
-          Note: Review text is lightly cleaned for readability (spelling/spacing only).
-        </p>
       </section>
 
-      {/* Stage 1 – Local Trust CTA */}
       <section
         style={{
           marginTop: 48,
@@ -152,9 +147,6 @@ export default function ReviewsPage() {
         <h2 style={{ fontSize: 28, fontWeight: 800, marginBottom: 10 }}>
           Need help with your car?
         </h2>
-        <p style={{ fontSize: 16, opacity: 0.85, marginBottom: 18 }}>
-          Tell us what’s going on and we’ll follow up with next steps.
-        </p>
         <a
           href="/#quote-form"
           className="quote-btn"

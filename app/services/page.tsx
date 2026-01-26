@@ -3,9 +3,9 @@ import Link from "next/link";
 
 export const metadata: Metadata = {
   title:
-    "Mobile Mechanic Services Austin TX | Oil Change, Brakes, Detailing | Pit Stop Automotive",
+    "Mobile Mechanic Services Austin TX | Oil Change, Brakes, Engine Replacement | Pit Stop Automotive",
   description:
-    "Full list of mobile auto services in Austin TX: oil changes ($100), brake pads ($100+), engine diagnostics ($50), car detailing ($120+), tune-ups & more. We come to you! Get a free quote.",
+    "Full list of mobile auto services in Austin TX: oil changes ($100), brake service ($100), vehicle diagnostics ($50), tune-ups ($125), engine replacements & more. We come to you! Get a free quote.",
 };
 
 export default function ServicesPage() {
@@ -40,24 +40,30 @@ export default function ServicesPage() {
               {
                 "@type": "Service",
                 position: 3,
-                name: "Engine Diagnostics",
+                name: "Diagnostics",
                 description:
                   "Check engine light diagnosis and computer scanning.",
               },
               {
                 "@type": "Service",
                 position: 4,
-                name: "Tune-Up Service",
+                name: "Tune-Ups",
+		description:
+                  "Spark plug and air filter replacement.",
               },
               {
                 "@type": "Service",
                 position: 5,
                 name: "Suspension Repair",
+		description:
+                  "Big spring and coilover suspention type repair and replacement.",
               },
               {
                 "@type": "Service",
                 position: 6,
-                name: "Mobile Car Detailing",
+                name: "Engine Replacement",
+		description:
+                  "Full engine removal and replacement.",
               },
             ],
           }),
@@ -77,7 +83,7 @@ export default function ServicesPage() {
         </section>
 
         <section id="oil-change" className="service-detail">
-          <h2>Mobile Oil Change — Starting at $100</h2>
+          <h2>Synthetic Oil Change — Starting at $100</h2>
           <ul className="ul">
             <li>Drain and replace engine oil</li>
             <li>New oil filter installation</li>
@@ -87,7 +93,7 @@ export default function ServicesPage() {
         </section>
 
         <section id="brake-service" className="service-detail">
-          <h2>Mobile Brake Service — Starting at $100 + Parts</h2>
+          <h2>Brake Service — Starting at $100</h2>
           <ul className="ul">
             <li>Brake pad replacement</li>
             <li>Brake rotor inspection</li>
@@ -97,27 +103,27 @@ export default function ServicesPage() {
         </section>
 
         <section id="diagnostics" className="service-detail">
-          <h2>Engine Diagnostics — Starting at $50</h2>
+          <h2>Vehicle Diagnostics — Starting at $50</h2>
           <ul className="ul">
             <li>OBD-II computer scanning</li>
             <li>Fault code reading</li>
-            <li>System analysis</li>
-            <li>Written diagnostic report</li>
+            <li>Full vehicle analysis</li>
+            <li>Digital diagnostic report</li>
           </ul>
         </section>
 
         <section id="tune-up" className="service-detail">
-          <h2>Tune-Up Service</h2>
+          <h2>Tune-Up — Starting at $125</h2>
           <ul className="ul">
             <li>Spark plug replacement</li>
             <li>Air filter replacement</li>
-            <li>Fuel system cleaning</li>
+            <li>Fuel efficiency improvement</li>
             <li>Performance optimization</li>
           </ul>
         </section>
 
         <section id="suspension" className="service-detail">
-          <h2>Suspension Repair</h2>
+          <h2>Suspension Repair — Starting at $150</h2>
           <ul className="ul">
             <li>Shock absorber replacement</li>
             <li>Strut replacement</li>
@@ -126,24 +132,18 @@ export default function ServicesPage() {
           </ul>
         </section>
 
-        <section id="detailing" className="service-detail">
-          <h2>Mobile Car Detailing — Starting at $120</h2>
-          <ul className="ul">
-            <li>Interior vacuuming and cleaning</li>
-            <li>Dashboard and console detailing</li>
-            <li>Window cleaning inside and out</li>
-          </ul>
-        </section>
+        <section id="engine-replacement" className="service-detail">
+ 	  <h2>Engine Replacement — Starting at $1850</h2>
+  	  <ul className="ul">
+   	    <li>Engine removal</li>
+    	    <li>Installation of replacement engine</li>
+    	    <li>System connections and fluid refill</li>
+    	    <li>Startup and Testing</li>
+  	  </ul>
+	</section>
 
         <section id="service-areas">
-          <h2>Service Areas</h2>
-          <ul className="ul">
-            <li>Austin</li>
-            <li>Round Rock</li>
-            <li>Pflugerville</li>
-            <li>Cedar Park</li>
-            <li>Georgetown</li>
-          </ul>
+          <h2>We Service Austin And Surrounding Areas</h2>
         </section>
 
         <section id="cta">

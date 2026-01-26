@@ -1,14 +1,18 @@
-/* PROOF-STYLE-999 */
-
 
 body {
   margin: 0;
   font-family: 'orbitron', sans-serif;
   background-color: #000;
   color: #fff;
+  text-align: center;
 }
 
-.container { outline: 4px solid red; }
+.hero-title {
+  font-size: 42px;
+  font-weight: 900;
+  text-align: center;
+  margin-bottom: 1px; /* adjust freely */
+}
 
 .container {
   max-width: 650px;
@@ -39,10 +43,10 @@ header {
 }
 
 .header-text {
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 1);
   display: inline-block;
-  padding: 1rem 2rem;
-  border-radius: 8px;
+  padding: 2rem 2rem;
+  border-radius: 9px;
 }
 
 header > * {
@@ -56,7 +60,7 @@ header > * {
   margin-bottom: 1rem;
 }
 .h2 {
-  font-size: 1.2rem;
+  font-size: 1.35rem;
   margin-top: 1rem;
   color: #ffcc00;
 }
@@ -203,11 +207,12 @@ footer nav a:hover {
   padding: 1.5rem;
   border-radius: 8px;
   margin-bottom: 2rem;
-  border-left: 4px solid #ffcc00;
+  border-left: 4px solid #ff0000;
 }
 
+/*services headers*/
 .service-detail h2 {
-  color: #ffcc00;
+  color: #ffffff;
   margin-top: 0;
 }
 

@@ -5,7 +5,7 @@ import SiteFooter from "@/components/SiteFooter";
 
 
 export const metadata: Metadata = {
-  title: "Mobile Mechanic & Auto Detailing Austin TX | Pit Stop Automotive",
+  title: "Mobile Mechanic - Austin TX | Pit Stop Automotive",
   description:
     "Austin's trusted mobile mechanic & auto detailing service. We come to you! Serving Austin, Round Rock, Pflugerville, Cedar Park & Georgetown.",
   icons: {

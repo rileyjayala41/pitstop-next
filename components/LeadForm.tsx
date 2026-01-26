@@ -217,7 +217,7 @@ export default function LeadForm() {
       <input
         className="input"
         name="phone"
-        placeholder="Phone (numbers only)"
+        placeholder="Phone number"
         required
         inputMode="numeric"
         pattern="\d{10,15}"
@@ -234,7 +234,7 @@ export default function LeadForm() {
       <input
         className="input"
         name="address_display"
-        placeholder={addressReady ? "Service Address (start typing…)" : "Service Address"}
+        placeholder={addressReady ? "Service Address" : "Service Address"}
         required
         ref={addressInputRef}
         value={addressValue}
@@ -246,21 +246,22 @@ export default function LeadForm() {
       <input
         className="input"
         name="vehicle"
-        placeholder="Vehicle (Year Make Model) — ex: 2014 Toyota Camry"
+        placeholder="Vehicle (Year, Make, Model) — ex: 2004 Toyota Corolla"
         required
       />
 
       <select className="input" name="service" required>
         <option value="">Select Service</option>
-        <option>Diagnostics</option>
-        <option>Brake Repair</option>
         <option>Oil Change</option>
+        <option>Brake Repair</option>
+        <option>Diagnostics</option>
+	<option>Tune-Up</option>
         <option>Suspension</option>
         <option>Engine / Drivetrain</option>
         <option>Other</option>
       </select>
 
-      <textarea className="input" name="message" rows={4} placeholder="Tell us what's going on" />
+      <textarea className="input" name="message" rows={4} placeholder="How can we help?" />
 
       {/* Hidden fields so EmailJS gets them too */}
       <input type="hidden" name="address" value={addressValue} />

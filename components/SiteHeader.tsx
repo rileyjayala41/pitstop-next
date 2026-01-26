@@ -11,7 +11,7 @@ export default function SiteHeader() {
             className="logo"
           />
           <h1>Pit Stop Automotive</h1>
-          <p>Mobile Mechanic & Auto Detailing — Austin, TX</p>
+          <p>Mobile Mechanic — Austin, TX</p>
         </div>
       </header>
 
