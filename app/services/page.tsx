@@ -56,7 +56,7 @@ export default function ServicesPage() {
                 position: 5,
                 name: "Suspension Repair",
 		description:
-                  "Big spring and coilover suspention type repair and replacement.",
+                  "Suspension type repair and replacement.",
               },
               {
                 "@type": "Service",
@@ -138,7 +138,7 @@ export default function ServicesPage() {
    	    <li>Engine removal</li>
     	    <li>Installation of replacement engine</li>
     	    <li>System connections and fluid refill</li>
-    	    <li>Startup and Testing</li>
+    	    <li>Startup and testing</li>
   	  </ul>
 	</section>
 

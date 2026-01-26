@@ -14,7 +14,7 @@ export default function HomePage() {
 	  </h1>
 
           <p style={{ fontSize: 18, opacity: 0.9, maxWidth: 560 }}>
-            Skip the shop, We'll come straight to your driveway!
+            Skip the shop — we'll come straight to your driveway!
           </p>
 
           <div className="cta" style={{ marginTop: 18 }}>
@@ -36,7 +36,7 @@ export default function HomePage() {
               <strong>Synthetic Oil Change:</strong> starting at $100
             </li>
             <li>
-              <strong>Brakes:</strong> starting at $100 + parts
+              <strong>Brakes:</strong> starting at $100
             </li>
             <li>
               <strong>Diagnostics:</strong> starting at $50
@@ -65,13 +65,13 @@ export default function HomePage() {
 	    </p>
 
             <p style={{ marginTop: 10, marginBottom: 0, fontSize: 13, opacity: 0.75 }}>
-              No hassle • Honest pricing • Pit-stop Speed
+              No hassle • Honest pricing • Pit-stop speed
             </p>
           </div>
 
           <LeadForm />
 	  <p style={{ marginTop: 10, marginBottom: 0, fontSize: 14, opacity: 0.85 }}>
-              <strong>Customer said:</strong>{" "}
+              <strong>Customer review:</strong>{" "}
               <span style={{ opacity: 0.9 }}>
                 “He came to my driveway, fixed it on the spot, and saved me a trip to the shop.”
               </span>

@@ -69,20 +69,19 @@ export default function AboutPage() {
 
       <article>
         <section id="about">
-          <h2>About Pit Stop Automotive — Austin&apos;s Mobile Mechanic</h2>
+          <h2>Pit Stop Automotive Is Austin&apos;s Mobile Mechanic</h2>
           <p>
             <strong>Pit Stop Automotive</strong> is a{" "}
-            <strong>mobile-first auto service</strong> company proudly born and
+            <strong>mobile auto service</strong> company proudly born and
             based in <strong>Austin, Texas</strong>. We started with a simple
-            mission: to make vehicle care simple, fast, and transparent for busy
-            Austin residents.
+            goal: to make vehicle care simple, fast, and transparent for busy
+            people.
           </p>
 
           <p>
             We understand that your time is valuable. That&apos;s why we bring
-            our <strong>professional mechanic and detailing services</strong>{" "}
-            directly to your home, office, or wherever you are in the Austin
-            metro area. No more scheduling around shop hours, no more sitting in
+            our <strong>professional mechanic services</strong>{" "}
+            directly to your driveway. No more scheduling around shop hours, no more sitting in
             waiting rooms, and no more surprise charges.
           </p>
         </section>
@@ -93,7 +92,7 @@ export default function AboutPage() {
             To provide{" "}
             <strong>convenient, honest, and affordable mobile auto care</strong>{" "}
             to the Austin community. Whether you need a quick oil change, brake
-            service, engine diagnostics, or a full car detail — we&apos;ve got
+            service, diagnostics, or a full engine replacement — we&apos;ve got
             your back, wherever you are.
           </p>
         </section>
@@ -102,8 +101,7 @@ export default function AboutPage() {
           <h2>What Sets Us Apart</h2>
           <ul className="ul">
             <li>
-              <strong>Mobile Convenience:</strong> We come to you anywhere in
-              Austin, Round Rock, Pflugerville, Cedar Park, or Georgetown
+              <strong>Mobile Convenience:</strong> We come to you, wherever you are (in Austin, TX)
             </li>
             <li>
               <strong>Transparent Pricing:</strong> No hidden fees. You know
@@ -139,7 +137,7 @@ export default function AboutPage() {
         <section id="cta">
           <h2>Ready to Experience Mobile Auto Care?</h2>
           <p>
-            Skip the hassle of traditional auto shops. Let Pit Stop Automotive
+            Skip the hassle of traditional shops. Let us
             bring expert service to your doorstep.
           </p>
           <div className="cta">
