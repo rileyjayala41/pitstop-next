@@ -81,7 +81,11 @@ export default function ServicesPage() {
             metro area.
           </p>
         </section>
-
+	<section>
+	<span style={{ fontSize: 14, opacity: 0.8 }}>
+                (Starting prices reflect common labor—final price depends on parts and vehicle)
+        </span>
+	</section>
         <section id="oil-change" className="service-detail">
           <h2>Synthetic Oil Change — Starting at $100</h2>
           <ul className="ul">
