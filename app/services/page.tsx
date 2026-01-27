@@ -78,7 +78,7 @@ export default function ServicesPage() {
             <strong>mechanic services</strong> directly to your
             location. No need to drive to a shop or wait in line — our{" "}
             <strong>mobile mechanics</strong> come to you anywhere in the Austin
-            metro area.
+            area.
           </p>
         </section>
 	<section>
