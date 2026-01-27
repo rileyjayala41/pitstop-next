@@ -75,7 +75,7 @@ export default function ServicesPage() {
           <h2>Mobile Auto Services in Austin, TX</h2>
           <p>
             At <strong>Pit Stop Automotive</strong>, we bring professional{" "}
-            <strong>mechanic and detailing services</strong> directly to your
+            <strong>mechanic services</strong> directly to your
             location. No need to drive to a shop or wait in line — our{" "}
             <strong>mobile mechanics</strong> come to you anywhere in the Austin
             metro area.
