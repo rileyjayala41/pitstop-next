@@ -16,6 +16,9 @@ export default function HomePage() {
           <p style={{ fontSize: 18, opacity: 0.9, maxWidth: 560 }}>
             Skip the shop — we'll come straight to your driveway!
           </p>
+	  <span style={{ opacity: 0.9 }}>
+                Most jobs completed same day, and often <strong>under 2 hours</strong>
+          </span>
 
           <div className="cta" style={{ marginTop: 18 }}>
             <a className="quote-btn" href="#quote-form">
@@ -37,6 +40,10 @@ export default function HomePage() {
             </li>
             <li>
               <strong>Brakes:</strong> starting at $100
+	      <div></div>
+	      <span style={{ fontSize: 14, opacity: 0.75 }}>
+                Most common service · Same-day availability
+              </span>
             </li>
             <li>
               <strong>Diagnostics:</strong> starting at $50
@@ -48,7 +55,7 @@ export default function HomePage() {
               <strong>Suspension:</strong> starting at $150
             </li>
             <li>
-              <strong>Engine Replacement:</strong> starting at $1850
+              <strong>Engine Replacement:</strong> Quote Required
             </li>
           </ul>
 

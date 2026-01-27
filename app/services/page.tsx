@@ -104,7 +104,10 @@ export default function ServicesPage() {
 
         <section id="diagnostics" className="service-detail">
           <h2>Vehicle Diagnostics — Starting at $50</h2>
-          <ul className="ul">
+          <span style={{ opacity: 0.8 }}>
+                (Fee waived on <strong>certian</strong> repairs <strong>when booked</strong>)
+            </span>
+	  <ul className="ul">
             <li>OBD-II computer scanning</li>
             <li>Fault code reading</li>
             <li>Full vehicle analysis</li>
@@ -133,7 +136,7 @@ export default function ServicesPage() {
         </section>
 
         <section id="engine-replacement" className="service-detail">
- 	  <h2>Engine Replacement — Starting at $1850</h2>
+ 	  <h2>Engine Replacement — Quote Required</h2>
   	  <ul className="ul">
    	    <li>Engine removal</li>
     	    <li>Installation of replacement engine</li>
@@ -144,7 +147,15 @@ export default function ServicesPage() {
 
         <section id="service-areas">
           <h2>We Service Austin And Surrounding Areas</h2>
-        </section>
+          <span style={{ opacity: 0.8 }}>
+                ($20 Travel fee applied)
+	  </span>
+	  <div>
+	  </div>
+	  <span style={{ opacity: 0.8 }}>
+                (Fee waived on <strong>certian</strong> repairs <strong>when booked</strong>)
+          </span>
+	</section>
 
         <section id="cta">
           <h2>Ready to Book Your Service?</h2>

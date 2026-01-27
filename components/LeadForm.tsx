@@ -258,7 +258,7 @@ export default function LeadForm() {
 	<option>Tune-Up</option>
         <option>Suspension</option>
         <option>Engine / Drivetrain</option>
-        <option>Other</option>
+        <option>Other (please explain)</option>
       </select>
 
       <textarea className="input" name="message" rows={4} placeholder="How can we help?" />
