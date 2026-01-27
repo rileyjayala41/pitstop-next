@@ -1,6 +1,9 @@
 import { supabaseServer } from "@/lib/supabaseServer";
 import AdminLeadsTable, { type Lead } from "@/components/AdminLeadsTable";
 
+// ✅ IMPORTANT: admin data must be fresh; disable Next.js caching for this route
+export const dynamic = "force-dynamic";
+
 export default async function Page() {
   const { data, error } = await supabaseServer
     .from("leads")
